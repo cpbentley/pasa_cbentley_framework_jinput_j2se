@@ -5,6 +5,7 @@ import net.java.games.input.Component.Identifier;
 import net.java.games.input.Event;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
+import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.structs.IntToStrings;
 import pasa.cbentley.framework.coreui.src4.ctx.CoreUiCtx;
 import pasa.cbentley.framework.coreui.src4.event.DeviceEvent;
@@ -12,13 +13,13 @@ import pasa.cbentley.framework.coreui.src4.interfaces.IExternalDevice;
 import pasa.cbentley.framework.coreui.src4.tech.IBCodes;
 import pasa.cbentley.framework.coreui.src4.tech.IInput;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
-import pasa.cbentley.framework.jinput.j2se.engine.ExternalInput;
+import pasa.cbentley.framework.jinput.j2se.engine.ControllerBentley;
 
-public abstract class GamePad implements IExternalDevice {
+public abstract class GamePadAbstract implements IExternalDevice {
 
    protected final JInputCtx jic;
 
-   public GamePad(JInputCtx jic) {
+   public GamePadAbstract(JInputCtx jic) {
       this.jic = jic;
    }
 
@@ -29,6 +30,10 @@ public abstract class GamePad implements IExternalDevice {
     */
    public IntToStrings getControllerData() {
       return null;
+   }
+
+   public CoreUiCtx getCoreUiCtx() {
+      return jic.getCAC().getCUC();
    }
 
    protected int getDeviceButton(Component c) {
@@ -57,24 +62,31 @@ public abstract class GamePad implements IExternalDevice {
       }
       return 0;
    }
-   
-   public CoreUiCtx getCoreUiCtx() {
-      return jic.getCAC().getCUC();
-   }
 
-   public abstract DeviceEvent getEvent(Event event, ExternalInput ei);
+   /**
+    * 
+    * @param event
+    * @param ei
+    * @return null if {@link Event} does not represent is valid event
+    */
+   public abstract DeviceEvent getEvent(Event event, ControllerBentley ei);
 
    public int getType() {
       return IInput.DEVICE_2_GAMEPAD;
    }
 
    //#mdebug
+   public IDLog toDLog() {
+      return toStringGetUCtx().toDLog();
+   }
+
    public String toString() {
       return Dctx.toString(this);
    }
 
    public void toString(Dctx dc) {
-      dc.root(this, "GamePad");
+      dc.root(this, GamePadAbstract.class, "@line82");
+      toStringPrivate(dc);
    }
 
    public String toString1Line() {
@@ -82,11 +94,18 @@ public abstract class GamePad implements IExternalDevice {
    }
 
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, "GamePad");
+      dc.root1Line(this, GamePadAbstract.class);
+      toStringPrivate(dc);
    }
-   //#enddebug
 
    public UCtx toStringGetUCtx() {
       return jic.getUCtx();
    }
+
+   private void toStringPrivate(Dctx dc) {
+
+   }
+
+   //#enddebug
+
 }

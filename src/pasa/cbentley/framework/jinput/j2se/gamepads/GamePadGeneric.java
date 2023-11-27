@@ -3,34 +3,37 @@ package pasa.cbentley.framework.jinput.j2se.gamepads;
 import net.java.games.input.Component;
 import net.java.games.input.Component.Identifier;
 import net.java.games.input.Event;
+import pasa.cbentley.core.src4.ctx.UCtx;
+import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.framework.coreui.src4.event.DeviceEvent;
 import pasa.cbentley.framework.coreui.src4.interfaces.IExternalDevice;
 import pasa.cbentley.framework.coreui.src4.tech.IBCodes;
 import pasa.cbentley.framework.coreui.src4.tech.IInput;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
-import pasa.cbentley.framework.jinput.j2se.engine.ExternalInput;
+import pasa.cbentley.framework.jinput.j2se.engine.ControllerBentley;
 
-public class GenericPad extends GamePad {
+public class GamePadGeneric extends GamePadAbstract {
 
-   public GenericPad(JInputCtx jic) {
+   public GamePadGeneric(JInputCtx jic) {
       super(jic);
    }
 
    public boolean isStart(int button) {
       return false;
    }
+
    public String getName() {
       return "GenericPad";
    }
-   
+
    public String getName(int button) {
-      return "Button"+button;
+      return "Button" + button;
    }
 
-   public DeviceEvent getEvent(Event event, ExternalInput ei) {
+   public DeviceEvent getEvent(Event event, ControllerBentley ei) {
       int deviceType = IInput.DEVICE_2_GAMEPAD;
 
-      int deviceID = ei.id; //id of gamepad
+      int deviceID = ei.getID(); //id of gamepad
       int deviceButton = 0;
       Component c = event.getComponent();
       float data = event.getValue();
@@ -44,7 +47,7 @@ public class GenericPad extends GamePad {
                deviceButton = IBCodes.PAD_LEFT;
             } else {
                mode = IInput.MOD_1_RELEASED;
-               deviceButton =  IBCodes.AXIS_X;
+               deviceButton = IBCodes.AXIS_X;
             }
          } else if (id == Component.Identifier.Axis.Y) {
             //data being 1 is only valid for digital axis
@@ -54,7 +57,7 @@ public class GenericPad extends GamePad {
                deviceButton = IBCodes.PAD_UP;
             } else {
                mode = IInput.MOD_1_RELEASED;
-               deviceButton =  IBCodes.AXIS_X;
+               deviceButton = IBCodes.AXIS_X;
             }
          }
       } else {
@@ -64,12 +67,30 @@ public class GenericPad extends GamePad {
          }
          deviceButton = super.getDeviceButton(c);
       }
-      IExternalDevice ed = ei.exdevice;
+      IExternalDevice ed = ei.getExdevice();
       //create event use touc
       final DeviceEvent de = new DeviceEvent(getCoreUiCtx(), deviceType, deviceID, mode, deviceButton);
       de.setParamO1(ed);
       return de;
    }
 
+   //#mdebug
+   public void toString(Dctx dc) {
+      dc.root(this, GamePadGeneric.class, "@line5");
+      toStringPrivate(dc);
+      super.toString(dc.sup());
+   }
+
+   private void toStringPrivate(Dctx dc) {
+
+   }
+
+   public void toString1Line(Dctx dc) {
+      dc.root1Line(this, GamePadGeneric.class);
+      toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
+   }
+
+   //#enddebug
 
 }
