@@ -7,7 +7,7 @@ import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.framework.coreui.src4.event.DeviceEvent;
 import pasa.cbentley.framework.coreui.src4.interfaces.IExternalDevice;
-import pasa.cbentley.framework.coreui.src4.tech.IBCodes;
+import pasa.cbentley.framework.coreui.src4.tech.ITechCodes;
 import pasa.cbentley.framework.coreui.src4.tech.IInput;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
 import pasa.cbentley.framework.jinput.j2se.engine.ControllerBentley;
@@ -42,22 +42,22 @@ public class GamePadGeneric extends GamePadAbstract {
          Identifier id = c.getIdentifier();
          if (id == Component.Identifier.Axis.X) {
             if (data == 1.0) {
-               deviceButton = IBCodes.PAD_RIGHT;
+               deviceButton = ITechCodes.PAD_RIGHT;
             } else if (data == -1.0) {
-               deviceButton = IBCodes.PAD_LEFT;
+               deviceButton = ITechCodes.PAD_LEFT;
             } else {
                mode = IInput.MOD_1_RELEASED;
-               deviceButton = IBCodes.AXIS_X;
+               deviceButton = ITechCodes.AXIS_X;
             }
          } else if (id == Component.Identifier.Axis.Y) {
             //data being 1 is only valid for digital axis
             if (data == 1.0) {
-               deviceButton = IBCodes.PAD_DOWN;
+               deviceButton = ITechCodes.PAD_DOWN;
             } else if (data == -1.0) {
-               deviceButton = IBCodes.PAD_UP;
+               deviceButton = ITechCodes.PAD_UP;
             } else {
                mode = IInput.MOD_1_RELEASED;
-               deviceButton = IBCodes.AXIS_X;
+               deviceButton = ITechCodes.AXIS_X;
             }
          }
       } else {

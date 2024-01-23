@@ -11,15 +11,15 @@ import net.java.games.input.ControllerListener;
 import pasa.cbentley.core.src4.ctx.ACtx;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.event.ILifeListener;
+import pasa.cbentley.core.src4.interfaces.IAPIService;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.framework.core.j2se.ctx.CoreFrameworkJ2seCtx;
-import pasa.cbentley.framework.core.src4.interfaces.IAPIService;
 import pasa.cbentley.framework.coreui.src4.ctx.CoreUiCtx;
 import pasa.cbentley.framework.coreui.src4.event.SenseEvent;
 import pasa.cbentley.framework.coreui.src4.interfaces.IExternalDevice;
-import pasa.cbentley.framework.coreui.src4.interfaces.ISenses;
+import pasa.cbentley.framework.coreui.src4.interfaces.ITechSenses;
 import pasa.cbentley.framework.coreui.src4.tech.IInput;
 import pasa.cbentley.framework.jinput.j2se.ctx.ConfigJInputDef;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
@@ -159,11 +159,11 @@ public abstract class JInputEngineAbstract implements IAPIService, IInput, IStri
    public void deviceConnectionEvent(ControllerBentley ei, boolean isConnect) {
       int deviceButton = 0;
       if (isConnect) {
-         deviceButton = ISenses.DEVICE_CONNECTED;
+         deviceButton = ITechSenses.DEVICE_CONNECTED;
       } else {
-         deviceButton = ISenses.DEVICE_DISCONNECTED;
+         deviceButton = ITechSenses.DEVICE_DISCONNECTED;
       }
-      final SenseEvent se = new SenseEvent(jic.getCoreUiCtx(), ISenses.GESTURE_TYPE_12_DEVICE, deviceButton, ei.id);
+      final SenseEvent se = new SenseEvent(jic.getCoreUiCtx(), ITechSenses.GESTURE_TYPE_12_DEVICE, deviceButton, ei.id);
       //final DeviceEvent de = new DeviceEvent(fc, DEVICE_2_GAMEPAD, ei.id, MOD_4_SENSED, deviceButton);
       se.setParamO1(ei.getExdevice());
 

@@ -10,7 +10,7 @@ import pasa.cbentley.core.src4.event.ILifeContext;
 import pasa.cbentley.core.src4.helpers.StringBBuilder;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.framework.coreui.src4.event.DeviceEvent;
-import pasa.cbentley.framework.coreui.src4.tech.IBCodes;
+import pasa.cbentley.framework.coreui.src4.tech.ITechCodes;
 import pasa.cbentley.framework.jinput.j2se.gamepads.GamePadAbstract;
 
 /**

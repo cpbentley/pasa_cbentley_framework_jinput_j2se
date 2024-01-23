@@ -9,8 +9,8 @@ import pasa.cbentley.framework.coreui.src4.event.DeviceEventFloat;
 import pasa.cbentley.framework.coreui.src4.event.DeviceEventXY;
 import pasa.cbentley.framework.coreui.src4.event.SenseEvent;
 import pasa.cbentley.framework.coreui.src4.interfaces.IExternalDevice;
-import pasa.cbentley.framework.coreui.src4.interfaces.ISenses;
-import pasa.cbentley.framework.coreui.src4.tech.IBCodes;
+import pasa.cbentley.framework.coreui.src4.interfaces.ITechSenses;
+import pasa.cbentley.framework.coreui.src4.tech.ITechCodes;
 import pasa.cbentley.framework.coreui.src4.tech.IInput;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
 import pasa.cbentley.framework.jinput.j2se.engine.ControllerBentley;
@@ -30,41 +30,41 @@ public class GamePadGameCube extends GamePadAbstract {
 
    public String getButton(int button) {
       switch (button) {
-         case IBCodes.PAD_BUTTON_0:
+         case ITechCodes.PAD_BUTTON_0:
             return "X";
-         case IBCodes.PAD_BUTTON_1:
+         case ITechCodes.PAD_BUTTON_1:
             return "A";
-         case IBCodes.PAD_BUTTON_2:
+         case ITechCodes.PAD_BUTTON_2:
             return "B";
-         case IBCodes.PAD_BUTTON_3:
+         case ITechCodes.PAD_BUTTON_3:
             return "Y";
-         case IBCodes.PAD_BUTTON_4:
+         case ITechCodes.PAD_BUTTON_4:
             return "L";
-         case IBCodes.PAD_BUTTON_5:
+         case ITechCodes.PAD_BUTTON_5:
             return "R";
-         case IBCodes.PAD_BUTTON_7:
+         case ITechCodes.PAD_BUTTON_7:
             return "Z";
-         case IBCodes.PAD_BUTTON_9:
+         case ITechCodes.PAD_BUTTON_9:
             return "Start";
-         case IBCodes.PAD_BUTTON_12:
+         case ITechCodes.PAD_BUTTON_12:
             return "CrossUp";
-         case IBCodes.PAD_BUTTON_13:
+         case ITechCodes.PAD_BUTTON_13:
             return "CrossRight";
-         case IBCodes.PAD_BUTTON_14:
+         case ITechCodes.PAD_BUTTON_14:
             return "CrossDown";
-         case IBCodes.PAD_BUTTON_15:
+         case ITechCodes.PAD_BUTTON_15:
             return "CrossLeft";
-         case IBCodes.PAD_UP:
+         case ITechCodes.PAD_UP:
             return "PadUp";
-         case IBCodes.PAD_DOWN:
+         case ITechCodes.PAD_DOWN:
             return "PadDown";
-         case IBCodes.PAD_LEFT:
+         case ITechCodes.PAD_LEFT:
             return "PadLeft";
-         case IBCodes.PAD_RIGHT:
+         case ITechCodes.PAD_RIGHT:
             return "PadRight";
-         case IBCodes.PAD_UPZ:
+         case ITechCodes.PAD_UPZ:
             return "Upz";
-         case IBCodes.PAD_DOWNZ:
+         case ITechCodes.PAD_DOWNZ:
             return "Downz";
          default:
             break;
@@ -105,13 +105,13 @@ public class GamePadGameCube extends GamePadAbstract {
             return null;
          } else {
             isPressedPadUp = true;
-            deviceButton = IBCodes.PAD_UP;
+            deviceButton = ITechCodes.PAD_UP;
          }
       } else if (data > 0) {
          mode = IInput.MOD_1_RELEASED;
          if (isPressedPadUp) {
             isPressedPadUp = false;
-            deviceButton = IBCodes.PAD_UP;
+            deviceButton = ITechCodes.PAD_UP;
          } else {
             return null;
          }
@@ -122,13 +122,13 @@ public class GamePadGameCube extends GamePadAbstract {
             return null;
          } else {
             isPressedPadDown = true;
-            deviceButton = IBCodes.PAD_DOWN;
+            deviceButton = ITechCodes.PAD_DOWN;
          }
       } else {
          mode = IInput.MOD_1_RELEASED;
          if (isPressedPadDown) {
             isPressedPadDown = false;
-            deviceButton = IBCodes.PAD_DOWN;
+            deviceButton = ITechCodes.PAD_DOWN;
          } else {
             return null;
          }
@@ -150,13 +150,13 @@ public class GamePadGameCube extends GamePadAbstract {
             return null;
          } else {
             isPressedPadRight = true;
-            deviceButton = IBCodes.PAD_RIGHT;
+            deviceButton = ITechCodes.PAD_RIGHT;
          }
       } else if (data > 0) {
          mode = IInput.MOD_1_RELEASED;
          if (isPressedPadRight) {
             isPressedPadRight = false;
-            deviceButton = IBCodes.PAD_RIGHT;
+            deviceButton = ITechCodes.PAD_RIGHT;
          } else {
             return null;
          }
@@ -167,13 +167,13 @@ public class GamePadGameCube extends GamePadAbstract {
             return null;
          } else {
             isPressedPadLeft = true;
-            deviceButton = IBCodes.PAD_LEFT;
+            deviceButton = ITechCodes.PAD_LEFT;
          }
       } else {
          mode = IInput.MOD_1_RELEASED;
          if (isPressedPadLeft) {
             isPressedPadLeft = false;
-            deviceButton = IBCodes.PAD_LEFT;
+            deviceButton = ITechCodes.PAD_LEFT;
          } else {
             return null;
          }
@@ -195,13 +195,13 @@ public class GamePadGameCube extends GamePadAbstract {
             return null;
          } else {
             isPressedPadUpZ = true;
-            deviceButton = IBCodes.PAD_UPZ;
+            deviceButton = ITechCodes.PAD_UPZ;
          }
       } else if (data > 0) {
          mode = IInput.MOD_1_RELEASED;
          if (isPressedPadUpZ) {
             isPressedPadUpZ = false;
-            deviceButton = IBCodes.PAD_UPZ;
+            deviceButton = ITechCodes.PAD_UPZ;
          } else {
             return null;
          }
@@ -212,13 +212,13 @@ public class GamePadGameCube extends GamePadAbstract {
             return null;
          } else {
             isPressedPadDownZ = true;
-            deviceButton = IBCodes.PAD_DOWNZ;
+            deviceButton = ITechCodes.PAD_DOWNZ;
          }
       } else {
          mode = IInput.MOD_1_RELEASED;
          if (isPressedPadDownZ) {
             isPressedPadDownZ = false;
-            deviceButton = IBCodes.PAD_DOWNZ;
+            deviceButton = ITechCodes.PAD_DOWNZ;
          } else {
             return null;
          }
@@ -274,14 +274,14 @@ public class GamePadGameCube extends GamePadAbstract {
             }
             Identifier id = component.getIdentifier();
             if (isSensor) {
-               int sensorType = ISenses.SENSOR_TYPE_04_AXIS;
-               int sensorSubType = IBCodes.AXIS_X;
+               int sensorType = ITechSenses.SENSOR_TYPE_04_AXIS;
+               int sensorSubType = ITechCodes.AXIS_X;
                if (id == Component.Identifier.Axis.X) {
-                  sensorSubType = IBCodes.AXIS_X;
+                  sensorSubType = ITechCodes.AXIS_X;
                } else if (id == Component.Identifier.Axis.Y) {
-                  sensorSubType = IBCodes.AXIS_Y;
+                  sensorSubType = ITechCodes.AXIS_Y;
                } else if (id == Component.Identifier.Axis.Z) {
-                  sensorSubType = IBCodes.AXIS_Z;
+                  sensorSubType = ITechCodes.AXIS_Z;
                }
                final SenseEvent senseEvent = new SenseEvent(getCoreUiCtx(), sensorType, sensorSubType, deviceID);
                senseEvent.setValue(data);
@@ -289,9 +289,9 @@ public class GamePadGameCube extends GamePadAbstract {
             } else {
                if (id == Component.Identifier.Axis.X) {
                   if (dataPositive) {
-                     deviceButton = IBCodes.THROTTLE_A;
+                     deviceButton = ITechCodes.THROTTLE_A;
                   } else {
-                     deviceButton = IBCodes.THROTTLE_B;
+                     deviceButton = ITechCodes.THROTTLE_B;
                   }
                }
                DeviceEventFloat d = new DeviceEventFloat(getCoreUiCtx(), IInput.DEVICE_2_GAMEPAD, deviceID, deviceButton, data);
@@ -339,7 +339,7 @@ public class GamePadGameCube extends GamePadAbstract {
    }
 
    public boolean isStart(int button) {
-      return button == IBCodes.PAD_BUTTON_9;
+      return button == ITechCodes.PAD_BUTTON_9;
    }
 
    public void setDigital(boolean isDigital) {
