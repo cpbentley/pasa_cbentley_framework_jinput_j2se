@@ -175,7 +175,7 @@ public abstract class JInputEngineAbstract implements IAPIService, IInput, IStri
          public void run() {
             //this gamepad manager has no idea which canvas has the focus
             //other services with mouse focus tracking.. can find the canvashost and canvasappli
-            cac.publishEvent(se, null);
+            cac.publishEvent(se);
          }
       });
    }

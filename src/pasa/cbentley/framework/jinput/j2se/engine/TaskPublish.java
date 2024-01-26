@@ -16,7 +16,7 @@ public class TaskPublish implements Runnable {
    }
 
    public void run() {
-      jic.getCoreUiCtx().publishEvent(de, null);
+      jic.getCoreUiCtx().publishEvent(de);
    }
 
 }
