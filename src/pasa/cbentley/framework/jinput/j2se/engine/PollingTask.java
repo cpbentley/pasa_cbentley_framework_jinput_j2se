@@ -105,7 +105,7 @@ public class PollingTask implements Runnable, IStringable {
    }
 
    public UCtx toStringGetUCtx() {
-      return jic.getUCtx();
+      return jic.getUC();
    }
 
    //#enddebug

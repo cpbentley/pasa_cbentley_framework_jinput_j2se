@@ -72,7 +72,7 @@ public class ControllerBentley implements IStringable {
    }
 
    public UCtx toStringGetUCtx() {
-      return jic.getUCtx();
+      return jic.getUC();
    }
 
    private void toStringPrivate(Dctx dc) {

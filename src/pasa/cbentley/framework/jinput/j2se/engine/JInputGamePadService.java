@@ -83,7 +83,7 @@ public class JInputGamePadService extends JInputEngineAbstract {
             Event event = new Event();
             while (eventQueue.getNextEvent(event)) {
                //#mdebug
-               StringBBuilder sb = new StringBBuilder(jic.getUCtx());
+               StringBBuilder sb = new StringBBuilder(jic.getUC());
                sb.append("for ");
                sb.append(controller.getName());
                sb.append(" ");

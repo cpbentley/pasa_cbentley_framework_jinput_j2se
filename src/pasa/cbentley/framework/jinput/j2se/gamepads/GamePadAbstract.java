@@ -99,7 +99,7 @@ public abstract class GamePadAbstract implements IExternalDevice {
    }
 
    public UCtx toStringGetUCtx() {
-      return jic.getUCtx();
+      return jic.getUC();
    }
 
    private void toStringPrivate(Dctx dc) {

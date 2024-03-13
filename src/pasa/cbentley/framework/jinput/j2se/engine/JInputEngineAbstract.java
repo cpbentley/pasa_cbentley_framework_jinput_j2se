@@ -264,6 +264,6 @@ public abstract class JInputEngineAbstract implements IAPIService, IInput, IStri
    //#enddebug
 
    public UCtx toStringGetUCtx() {
-      return jic.getUCtx();
+      return jic.getUC();
    }
 }

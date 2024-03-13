@@ -39,7 +39,7 @@ public class JInputCtx extends ACtx {
    private boolean               isRefreshingDeviceList;
 
    public JInputCtx(IConfigJInput config, CoreFrameworkJ2seCtx cac) {
-      super(cac.getUCtx());
+      super(cac.getUC());
       this.jcac = cac;
 
       this.config = config;
