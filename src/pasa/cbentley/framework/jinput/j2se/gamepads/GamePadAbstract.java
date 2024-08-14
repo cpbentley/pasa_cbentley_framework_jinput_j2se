@@ -7,20 +7,19 @@ import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.structs.IntToStrings;
-import pasa.cbentley.framework.coreui.src4.ctx.CoreUiCtx;
-import pasa.cbentley.framework.coreui.src4.event.DeviceEvent;
-import pasa.cbentley.framework.coreui.src4.interfaces.IExternalDevice;
-import pasa.cbentley.framework.coreui.src4.tech.ITechCodes;
-import pasa.cbentley.framework.coreui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.ctx.CoreUiCtx;
+import pasa.cbentley.framework.core.ui.src4.event.DeviceEvent;
+import pasa.cbentley.framework.core.ui.src4.interfaces.IExternalDevice;
+import pasa.cbentley.framework.core.ui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.tech.ITechCodes;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
+import pasa.cbentley.framework.jinput.j2se.ctx.ObjectJIC;
 import pasa.cbentley.framework.jinput.j2se.engine.ControllerBentley;
 
-public abstract class GamePadAbstract implements IExternalDevice {
-
-   protected final JInputCtx jic;
+public abstract class GamePadAbstract extends ObjectJIC implements IExternalDevice {
 
    public GamePadAbstract(JInputCtx jic) {
-      this.jic = jic;
+      super(jic);
    }
 
    /**
@@ -59,6 +58,23 @@ public abstract class GamePadAbstract implements IExternalDevice {
          return ITechCodes.PAD_BUTTON_8;
       } else if (id == Component.Identifier.Button._9) {
          return ITechCodes.PAD_BUTTON_9;
+      } else if (id == Component.Identifier.Button._10) {
+         return ITechCodes.PAD_BUTTON_10;
+      } else if (id == Component.Identifier.Button._11) {
+         return ITechCodes.PAD_BUTTON_11;
+      } else if (id == Component.Identifier.Button._12) {
+         return ITechCodes.PAD_BUTTON_12;
+      } else if (id == Component.Identifier.Button._13) {
+         return ITechCodes.PAD_BUTTON_13;
+      } else if (id == Component.Identifier.Button._14) {
+         return ITechCodes.PAD_BUTTON_14;
+      } else if (id == Component.Identifier.Button._15) {
+         return ITechCodes.PAD_BUTTON_15;
+      } else if (id == Component.Identifier.Button._15) {
+         return ITechCodes.PAD_BUTTON_15;
+      } else {
+         //#debug
+         toDLog().pEvent("Uncoded DeviceButton Component Id name=" + id.getName(), this, GamePadGameCube.class, "getDeviceButton@75", LVL_05_FINE, true);
       }
       return 0;
    }
@@ -76,36 +92,21 @@ public abstract class GamePadAbstract implements IExternalDevice {
    }
 
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
    public void toString(Dctx dc) {
-      dc.root(this, GamePadAbstract.class, "@line82");
+      dc.root(this, GamePadAbstract.class, 80);
       toStringPrivate(dc);
-   }
-
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
+      super.toString(dc.sup());
    }
 
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, GamePadAbstract.class);
+      dc.root1Line(this, GamePadAbstract.class, 80);
       toStringPrivate(dc);
-   }
-
-   public UCtx toStringGetUCtx() {
-      return jic.getUC();
+      super.toString1Line(dc.sup1Line());
    }
 
    private void toStringPrivate(Dctx dc) {
 
    }
-
    //#enddebug
 
 }

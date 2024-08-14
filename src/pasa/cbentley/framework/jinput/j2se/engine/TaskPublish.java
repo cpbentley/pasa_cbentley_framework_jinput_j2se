@@ -1,8 +1,13 @@
 package pasa.cbentley.framework.jinput.j2se.engine;
 
-import pasa.cbentley.framework.coreui.src4.event.DeviceEvent;
+import pasa.cbentley.framework.core.ui.src4.event.DeviceEvent;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
 
+/**
+ * 
+ * @author Charles Bentley
+ *
+ */
 public class TaskPublish implements Runnable {
 
    protected final JInputCtx   jic;
@@ -16,7 +21,7 @@ public class TaskPublish implements Runnable {
    }
 
    public void run() {
-      jic.getCoreUiCtx().publishEvent(de);
+      jic.getCoreUiCtx().publishEventOnAllCanvas(de);
    }
 
 }

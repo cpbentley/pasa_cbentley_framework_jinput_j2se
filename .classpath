@@ -4,12 +4,12 @@
 	<classpathentry kind="src" path="libs"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_core_src4"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_core_j2se"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_core_src4"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_coredraw_j2se"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_coredraw_src4"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_coreui_j2se"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_coreui_src4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_core_framework_j2se"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_core_framework_src4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_core_draw_j2se"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_core_draw_src4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_core_ui_j2se"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_framework_core_ui_src4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/pasa_cbentley_byteobjects_src4"/>
 	<classpathentry kind="lib" path="libs/jinput-2.0.9.jar" sourcepath="libs/jinput-2.0.9-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>

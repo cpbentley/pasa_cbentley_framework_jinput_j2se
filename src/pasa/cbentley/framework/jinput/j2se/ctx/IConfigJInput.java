@@ -19,4 +19,6 @@ public interface IConfigJInput {
     * @return
     */
    public int getHeartBeatMilliSeconds();
+
+   public String getPathLibrary();
 }

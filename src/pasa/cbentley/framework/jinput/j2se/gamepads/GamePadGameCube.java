@@ -4,28 +4,46 @@ import net.java.games.input.Component;
 import net.java.games.input.Component.Identifier;
 import net.java.games.input.Event;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.framework.coreui.src4.event.DeviceEvent;
-import pasa.cbentley.framework.coreui.src4.event.DeviceEventFloat;
-import pasa.cbentley.framework.coreui.src4.event.DeviceEventXY;
-import pasa.cbentley.framework.coreui.src4.event.SenseEvent;
-import pasa.cbentley.framework.coreui.src4.interfaces.IExternalDevice;
-import pasa.cbentley.framework.coreui.src4.interfaces.ITechSenses;
-import pasa.cbentley.framework.coreui.src4.tech.ITechCodes;
-import pasa.cbentley.framework.coreui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.event.DeviceEvent;
+import pasa.cbentley.framework.core.ui.src4.event.DeviceEventFloat;
+import pasa.cbentley.framework.core.ui.src4.event.DeviceEventXY;
+import pasa.cbentley.framework.core.ui.src4.event.SenseEvent;
+import pasa.cbentley.framework.core.ui.src4.interfaces.ITechSenses;
+import pasa.cbentley.framework.core.ui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.tech.ITechCodes;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
 import pasa.cbentley.framework.jinput.j2se.engine.ControllerBentley;
 
 public class GamePadGameCube extends GamePadAbstract {
-   private boolean isDigital = true;
+   private boolean     isDigital         = true;
 
    /**
     * In Analog mode,
     * Are axis sensor event. Else we use {@link DeviceEventXY}
     */
-   private boolean isSensor;
+   private boolean     isSensor;
+
+   private float       minimalSensiblity = 0.02f;
+
+   private AxisPadCtrl axisPadMainVertical;
+
+   private AxisPadCtrl axisPadMainHoriz;
+
+   private AxisPadCtrl axisPadCVertical;
+
+   private AxisPadCtrl axisPadCHoriz;
 
    public GamePadGameCube(JInputCtx fc) {
       super(fc);
+
+      axisPadMainVertical = new AxisPadCtrl(jic, ITechCodes.PAD_UP, ITechCodes.PAD_DOWN);
+      axisPadMainHoriz = new AxisPadCtrl(jic, ITechCodes.PAD_LEFT, ITechCodes.PAD_RIGHT);
+
+      axisPadCVertical = new AxisPadCtrl(jic, ITechCodes.PAD_C_UP, ITechCodes.PAD_C_DOWN);
+      axisPadCHoriz = new AxisPadCtrl(jic, ITechCodes.PAD_C_LEFT, ITechCodes.PAD_C_RIGHT);
+
+      axisPadCVertical.setButtonEdge(0.6f);
+      axisPadCHoriz.setButtonEdge(0.6f);
    }
 
    public String getButton(int button) {
@@ -47,25 +65,31 @@ public class GamePadGameCube extends GamePadAbstract {
          case ITechCodes.PAD_BUTTON_9:
             return "Start";
          case ITechCodes.PAD_BUTTON_12:
-            return "CrossUp";
+            return "Cross_Up";
          case ITechCodes.PAD_BUTTON_13:
-            return "CrossRight";
+            return "Cross_Right";
          case ITechCodes.PAD_BUTTON_14:
-            return "CrossDown";
+            return "Cross_Down";
          case ITechCodes.PAD_BUTTON_15:
-            return "CrossLeft";
+            return "Cross_Left";
          case ITechCodes.PAD_UP:
-            return "PadUp";
+            return "Pad_Up";
          case ITechCodes.PAD_DOWN:
-            return "PadDown";
+            return "Pad_Down";
          case ITechCodes.PAD_LEFT:
-            return "PadLeft";
+            return "Pad_Left";
          case ITechCodes.PAD_RIGHT:
-            return "PadRight";
-         case ITechCodes.PAD_UPZ:
-            return "Upz";
-         case ITechCodes.PAD_DOWNZ:
-            return "Downz";
+            return "Pad_Right";
+         case ITechCodes.PAD_C_UP:
+            return "C_Up";
+         case ITechCodes.PAD_C_DOWN:
+            return "C_Down";
+         case ITechCodes.PAD_C_LEFT:
+            return "C_Left";
+         case ITechCodes.PAD_C_RIGHT:
+            return "C_Right";
+         case ITechCodes.PAD_POV:
+            return "pov";
          default:
             break;
       }
@@ -80,181 +104,72 @@ public class GamePadGameCube extends GamePadAbstract {
       return 0;
    }
 
-   private boolean isPressedPadRight;
-
-   private boolean isPressedPadLeft;
-
-   private boolean isPressedPadUp;
-
-   private boolean isPressedPadDown;
-
-   private boolean isPressedPadUpZ;
-
-   private boolean isPressedPadDownZ;
-
-   private DeviceEvent getDigitalFromAnalogY(Event event, Component component, ControllerBentley ei) {
-      float data = event.getValue();
-      int deviceButton = 0;
-      int mode = 0;
-      int deviceID = ei.getID(); //id of gamepad
-      int deviceType = IInput.DEVICE_2_GAMEPAD;
-      if (data >= 0.7) {
-         mode = IInput.MOD_0_PRESSED;
-         if (isPressedPadUp) {
-            //already pressed
-            return null;
-         } else {
-            isPressedPadUp = true;
-            deviceButton = ITechCodes.PAD_UP;
-         }
-      } else if (data > 0) {
-         mode = IInput.MOD_1_RELEASED;
-         if (isPressedPadUp) {
-            isPressedPadUp = false;
-            deviceButton = ITechCodes.PAD_UP;
-         } else {
-            return null;
-         }
-      } else if (data <= -0.7) {
-         mode = IInput.MOD_0_PRESSED;
-         if (isPressedPadDown) {
-            //already pressed
-            return null;
-         } else {
-            isPressedPadDown = true;
-            deviceButton = ITechCodes.PAD_DOWN;
-         }
-      } else {
-         mode = IInput.MOD_1_RELEASED;
-         if (isPressedPadDown) {
-            isPressedPadDown = false;
-            deviceButton = ITechCodes.PAD_DOWN;
-         } else {
-            return null;
-         }
-      }
-      DeviceEvent de = new DeviceEvent(getCoreUiCtx(), deviceType, deviceID, mode, deviceButton);
-      return de;
-   }
-
-   private DeviceEvent getDigitalFromAnalogX(Event event, Component component, ControllerBentley ei) {
-      float data = event.getValue();
-      int deviceButton = 0;
-      int mode = 0;
-      int deviceID = ei.getID(); //id of gamepad
-      int deviceType = IInput.DEVICE_2_GAMEPAD;
-      if (data >= 0.7) {
-         mode = IInput.MOD_0_PRESSED;
-         if (isPressedPadRight) {
-            //already pressed
-            return null;
-         } else {
-            isPressedPadRight = true;
-            deviceButton = ITechCodes.PAD_RIGHT;
-         }
-      } else if (data > 0) {
-         mode = IInput.MOD_1_RELEASED;
-         if (isPressedPadRight) {
-            isPressedPadRight = false;
-            deviceButton = ITechCodes.PAD_RIGHT;
-         } else {
-            return null;
-         }
-      } else if (data <= -0.7) {
-         mode = IInput.MOD_0_PRESSED;
-         if (isPressedPadLeft) {
-            //already pressed
-            return null;
-         } else {
-            isPressedPadLeft = true;
-            deviceButton = ITechCodes.PAD_LEFT;
-         }
-      } else {
-         mode = IInput.MOD_1_RELEASED;
-         if (isPressedPadLeft) {
-            isPressedPadLeft = false;
-            deviceButton = ITechCodes.PAD_LEFT;
-         } else {
-            return null;
-         }
-      }
-      DeviceEvent de = new DeviceEvent(getCoreUiCtx(), deviceType, deviceID, mode, deviceButton);
-      return de;
-   }
-
-   private DeviceEvent getDigitalFromAnalogZ(Event event, Component component, ControllerBentley ei) {
-      float data = event.getValue();
-      int deviceButton = 0;
-      int mode = 0;
-      int deviceID = ei.getID(); //id of gamepad
-      int deviceType = IInput.DEVICE_2_GAMEPAD;
-      if (data >= 0.7) {
-         mode = IInput.MOD_0_PRESSED;
-         if (isPressedPadUpZ) {
-            //already pressed
-            return null;
-         } else {
-            isPressedPadUpZ = true;
-            deviceButton = ITechCodes.PAD_UPZ;
-         }
-      } else if (data > 0) {
-         mode = IInput.MOD_1_RELEASED;
-         if (isPressedPadUpZ) {
-            isPressedPadUpZ = false;
-            deviceButton = ITechCodes.PAD_UPZ;
-         } else {
-            return null;
-         }
-      } else if (data <= -0.7) {
-         mode = IInput.MOD_0_PRESSED;
-         if (isPressedPadDownZ) {
-            //already pressed
-            return null;
-         } else {
-            isPressedPadDownZ = true;
-            deviceButton = ITechCodes.PAD_DOWNZ;
-         }
-      } else {
-         mode = IInput.MOD_1_RELEASED;
-         if (isPressedPadDownZ) {
-            isPressedPadDownZ = false;
-            deviceButton = ITechCodes.PAD_DOWNZ;
-         } else {
-            return null;
-         }
-      }
-      DeviceEvent de = new DeviceEvent(getCoreUiCtx(), deviceType, deviceID, mode, deviceButton);
-      return de;
-   }
-
+   /**
+    * null if event value is insignificant/noise
+    * @param event
+    * @param component
+    * @param ei
+    * @return
+    */
    private DeviceEvent getDigitalFromAnalog(Event event, Component component, ControllerBentley ei) {
       //we generate full events when above threhold. otherwise a move event
       Identifier id = component.getIdentifier();
       if (id == Component.Identifier.Axis.X) {
-         return getDigitalFromAnalogX(event, component, ei);
+         return axisPadMainHoriz.getDigitalFromAnalogAxis(event, component, ei);
       } else if (id == Component.Identifier.Axis.Y) {
-         return getDigitalFromAnalogY(event, component, ei);
+         return axisPadMainVertical.getDigitalFromAnalogAxis(event, component, ei);
       } else if (id == Component.Identifier.Axis.Z) {
-         return getDigitalFromAnalogZ(event, component, ei);
+         return axisPadCVertical.getDigitalFromAnalogAxis(event, component, ei);
+      } else if (id == Component.Identifier.Axis.RZ) {
+         return axisPadCHoriz.getDigitalFromAnalogAxis(event, component, ei);
+      } else if (id == Component.Identifier.Axis.RX) {
+         return getDigitalFromAnalogRotation(event, component, ei, ITechCodes.PAD_BUTTON_4);
+      } else if (id == Component.Identifier.Axis.RY) {
+         return getDigitalFromAnalogRotation(event, component, ei, ITechCodes.PAD_BUTTON_5);
       } else {
          //#debug
-         toDLog().pEvent("Unknown Component", this, GamePadGameCube.class, "getDigitalFromAnalog", LVL_05_FINE, true);
+         toDLog().pEvent("Uncoded GameCube Component Id name=" + id.getName(), this, GamePadGameCube.class, "getDigitalFromAnalog@108", LVL_05_FINE, true);
          return null;
       }
    }
 
-   private float minimalSensiblity = 0.02f;
+   private DeviceEvent getDigitalFromAnalogRotation(Event event, Component component, ControllerBentley ei, int deviceButton) {
+      float data = event.getValue();
+      int deviceType = IInput.DEVICE_2_GAMEPAD;
+      int deviceID = ei.getDeviceID(); //id of gamepad
+
+      if (data >= 0.02 || data <= -0.02) {
+         //#debug
+         toDLog().pFlow("data=" + data + " deviceID=" + deviceID, this, GamePadGameCube.class, "getDigitalFromAnalogRotation@149", LVL_05_FINE, true);
+         DeviceEventFloat de = new DeviceEventFloat(getCoreUiCtx(), deviceType, deviceID, deviceButton, data);
+         return de;
+      } else {
+         return null;
+      }
+   }
+
+  
 
    public DeviceEvent getEvent(Event event, ControllerBentley ei) {
       int deviceType = IInput.DEVICE_2_GAMEPAD;
 
-      int deviceID = ei.getID(); //id of gamepad
+      int deviceID = ei.getDeviceID(); //id of gamepad
       int deviceButton = 0;
       Component component = event.getComponent();
       int mode = IInput.MOD_0_PRESSED;
       DeviceEvent de = null;
-      IExternalDevice externalDevice = ei.getExdevice();
-      if (component.isAnalog()) {
+
+      Identifier identifier = component.getIdentifier();
+
+      if (identifier == Identifier.Axis.POV) {
+
+         float data = event.getValue();
+         deviceButton = ITechCodes.PAD_POV;
+         //that special cross
+         DeviceEventFloat d = new DeviceEventFloat(getCoreUiCtx(), IInput.DEVICE_2_GAMEPAD, deviceID, deviceButton, data);
+         de = d;
+
+      } else if (component.isAnalog()) {
          if (isDigital()) {
             de = getDigitalFromAnalog(event, component, ei);
          } else {
@@ -310,14 +225,6 @@ public class GamePadGameCube extends GamePadAbstract {
          deviceButton = super.getDeviceButton(component);
          de = new DeviceEvent(getCoreUiCtx(), deviceType, deviceID, mode, deviceButton);
       }
-      if (externalDevice == null) {
-         //#debug
-         toDLog().pNull("", this, GamePadGameCube.class, "getEvent", LVL_05_FINE, true);
-      }
-      //create event use touc
-      if (de != null) {
-         de.setParamO1(externalDevice);
-      }
       return de;
    }
 
@@ -325,7 +232,7 @@ public class GamePadGameCube extends GamePadAbstract {
       return "GameCubePad";
    }
 
-   public String getName(int button) {
+   public String getNameButton(int button) {
       return getButton(button);
    }
 

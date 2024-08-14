@@ -3,35 +3,32 @@ package pasa.cbentley.framework.jinput.j2se.engine;
 import java.util.Iterator;
 import java.util.List;
 
-import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
+import pasa.cbentley.framework.jinput.j2se.ctx.ObjectJIC;
 
-public class PollingTask implements Runnable, IStringable {
+public class PollingTask extends ObjectJIC implements Runnable, IStringable {
 
-   protected final JInputCtx            jic;
+   protected final JInputServiceAbstract engine;
 
-   protected final JInputEngineAbstract engine;
+   private List<ControllerBentley>      exs;
+
+   private ControllerBentley failure;
 
    private volatile boolean             isRunning = true;
 
-   private List<ControllerBentley>          exs;
-
-   public PollingTask(JInputCtx jc, JInputEngineAbstract engine) {
-      this(jc, engine, jc.getListGamePadSticks());
+   public PollingTask(JInputCtx jic, JInputServiceAbstract engine) {
+      super(jic);
+      this.engine = engine;
    }
 
-   private ControllerBentley failure;
-   
-   public PollingTask(JInputCtx jc, JInputEngineAbstract engine, List<ControllerBentley> devices) {
-      this.jic = jc;
-      this.engine = engine;
-      exs = devices;
+   public boolean isRunning() {
+      return isRunning;
    }
 
    public void run() {
+      exs = jic.getListGamePadSticks();
       try {
          int counterForDeviceCheck = 0;
          while (isRunning()) {
@@ -49,10 +46,10 @@ public class PollingTask implements Runnable, IStringable {
             }
             long beats = jic.getHeartBeatMilliSeconds();
             counterForDeviceCheck += beats;
-            if(failure != null) {
+            if (failure != null) {
                exs = jic.getListGamePadSticks();
-              boolean isRemoved = exs.remove(failure); //make sure its removed, if hardware scan failed
-              //#debug
+               boolean isRemoved = exs.remove(failure); //make sure its removed, if hardware scan failed
+               //#debug
                toDLog().pTest("msg", this, PollingTask.class, "run", LVL_05_FINE, true);
             }
             if (jic.isRefreshingDeviceList()) {
@@ -69,46 +66,26 @@ public class PollingTask implements Runnable, IStringable {
       }
    }
 
-   public boolean isRunning() {
-      return isRunning;
-   }
-
    public void setRunning(boolean isRunning) {
       this.isRunning = isRunning;
    }
 
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
    public void toString(Dctx dc) {
-      dc.root(this, PollingTask.class, "@line5");
+      dc.root(this, PollingTask.class, 85);
       toStringPrivate(dc);
+      super.toString(dc.sup());
    }
 
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
+   public void toString1Line(Dctx dc) {
+      dc.root1Line(this, PollingTask.class, 85);
+      toStringPrivate(dc);
+      super.toString1Line(dc.sup1Line());
    }
 
    private void toStringPrivate(Dctx dc) {
 
    }
-
-   public void toString1Line(Dctx dc) {
-      dc.root1Line(this, PollingTask.class);
-      toStringPrivate(dc);
-   }
-
-   public UCtx toStringGetUCtx() {
-      return jic.getUC();
-   }
-
    //#enddebug
-   
 
 }

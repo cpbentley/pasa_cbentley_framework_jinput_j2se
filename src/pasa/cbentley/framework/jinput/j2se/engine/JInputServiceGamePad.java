@@ -1,5 +1,7 @@
 package pasa.cbentley.framework.jinput.j2se.engine;
 
+import com.sun.org.apache.bcel.internal.generic.PUTFIELD;
+
 import net.java.games.input.Component;
 import net.java.games.input.Component.Identifier;
 import net.java.games.input.Controller;
@@ -8,9 +10,11 @@ import net.java.games.input.Event;
 import net.java.games.input.EventQueue;
 import pasa.cbentley.core.src4.event.ILifeContext;
 import pasa.cbentley.core.src4.helpers.StringBBuilder;
+import pasa.cbentley.core.src4.interfaces.IExecutor;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.framework.coreui.src4.event.DeviceEvent;
-import pasa.cbentley.framework.coreui.src4.tech.ITechCodes;
+import pasa.cbentley.framework.core.ui.src4.event.DeviceEvent;
+import pasa.cbentley.framework.core.ui.src4.interfaces.IExternalDevice;
+import pasa.cbentley.framework.core.ui.src4.tech.ITechCodes;
 import pasa.cbentley.framework.jinput.j2se.gamepads.GamePadAbstract;
 
 /**
@@ -37,34 +41,35 @@ import pasa.cbentley.framework.jinput.j2se.gamepads.GamePadAbstract;
  * @author Charles Bentley
  *
  */
-public class JInputGamePadService extends JInputEngineAbstract {
+public class JInputServiceGamePad extends JInputServiceAbstract {
 
    private int failure;
 
-   public JInputGamePadService() {
+   public JInputServiceGamePad() {
 
    }
 
    public void lifePaused(ILifeContext context) {
       //#debug
-      toDLog().pFlow("", this, JInputGamePadService.class, "lifePaused", LVL_05_FINE, true);
+      toDLog().pFlow("", this, JInputServiceGamePad.class, "lifePaused@54", LVL_05_FINE, true);
 
    }
 
    public void lifeResumed(ILifeContext context) {
       //#debug
-      toDLog().pFlow("", this, JInputGamePadService.class, "lifeResumed", LVL_05_FINE, true);
+      toDLog().pFlow("", this, JInputServiceGamePad.class, "lifeResumed@70", LVL_05_FINE, true);
 
    }
 
    public void lifeStarted(ILifeContext context) {
-
+      //#debug
+      toDLog().pFlow("", this, JInputServiceGamePad.class, "lifeStarted@66", LVL_05_FINE, true);
    }
 
    public void lifeStopped(ILifeContext context) {
       //#debug
-      toDLog().pFlow("", this, JInputGamePadService.class, "lifeStopped", LVL_05_FINE, true);
-      stopService(0);
+      toDLog().pFlow("", this, JInputServiceGamePad.class, "lifeStopped@70", LVL_05_FINE, true);
+      stopService(0, null);
    }
 
    /**
@@ -74,38 +79,55 @@ public class JInputGamePadService extends JInputEngineAbstract {
     * <br>
     * @param ca
     */
-   public void poll(ControllerBentley exInput) {
-      Controller controller = exInput.getController();
+   public void poll(ControllerBentley controllerBentley) {
+      Controller controller = controllerBentley.getController();
       if (controller.getType() == Type.GAMEPAD || controller.getType() == Type.STICK) {
          boolean isPolled = controller.poll();
          if (isPolled) {
             EventQueue eventQueue = controller.getEventQueue();
             Event event = new Event();
             while (eventQueue.getNextEvent(event)) {
+               float value = event.getValue();
+
                //#mdebug
                StringBBuilder sb = new StringBBuilder(jic.getUC());
                sb.append("for ");
                sb.append(controller.getName());
                sb.append(" ");
-               sb.append(" ->");
-               sb.append(event.getComponent().getName(),7);
+               sb.append(" -> ");
+               sb.append(event.getComponent().getName(), 10);
                sb.append(' ');
+               sb.append(" id=");
+               sb.append(event.getComponent().getIdentifier().getName(), 10);
                sb.append(" value=");
-               sb.appendPretty(event.getValue(),3);
-               toDLog().pEvent(sb.toString(), null, JInputGamePadService.class, "poll");
+               sb.appendPretty(value, 3);
+               sb.append(" time=");
+               long nanos = event.getNanos();
+               sb.append(String.valueOf(nanos));
+
+               if (Math.abs(value) > 0.03f) {
+                  toDLog().pEvent(sb.toString(), null, JInputServiceGamePad.class, "poll@110");
+               }
                //#enddebug
-               GamePadAbstract gp = (GamePadAbstract) exInput.getExdevice();
-               final DeviceEvent de = gp.getEvent(event, exInput);
+
+               GamePadAbstract gamePad = (GamePadAbstract) controllerBentley.getExternalDevice();
+               final DeviceEvent de = gamePad.getEvent(event, controllerBentley);
                if (de != null) {
+                  IExternalDevice ed = controllerBentley.getExternalDevice();
+                  if (ed == null) {
+                     toDLog().pNull("Null IExternalDevice", this, JInputServiceGamePad.class, "poll@114", LVL_10_SEVERE, true);
+                  }
+                  de.setParamO1(ed);
                   //publish event on the active canvas?
                   TaskPublish taskPub = new TaskPublish(jic, de);
                   //we are in the jinput thread, so we have to call serially
-                  jic.getCoreUiCtx().runGUI(taskPub);
+                  IExecutor executor = jic.getCoreUiCtx().getExecutor();
+                  executor.executeMainLater(taskPub);
                }
             }
          } else {
             //#debug
-            toDLog().pEvent1("Poll failed for " + controller.getName(), null, JInputGamePadService.class, "poll@line107");
+            toDLog().pEvent1("Poll failed for " + controller.getName(), null, JInputServiceGamePad.class, "poll@110");
 
             //issue with controllers.. restart poll task
             throw new IllegalStateException();
@@ -114,12 +136,12 @@ public class JInputGamePadService extends JInputEngineAbstract {
    }
 
    public void toString(Dctx dc) {
-      dc.root(this, JInputGamePadService.class, 145);
+      dc.root(this, JInputServiceGamePad.class, 145);
       super.toString(dc.sup());
    }
 
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, JInputGamePadService.class);
+      dc.root1Line(this, JInputServiceGamePad.class);
       super.toString1Line(dc.sup1Line());
    }
 

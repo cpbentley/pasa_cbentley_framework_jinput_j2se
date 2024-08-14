@@ -12,17 +12,19 @@ import pasa.cbentley.core.src4.ctx.ACtx;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.event.ILifeListener;
 import pasa.cbentley.core.src4.interfaces.IAPIService;
+import pasa.cbentley.core.src4.interfaces.IExecutor;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.logging.IStringable;
 import pasa.cbentley.framework.core.j2se.ctx.CoreFrameworkJ2seCtx;
-import pasa.cbentley.framework.coreui.src4.ctx.CoreUiCtx;
-import pasa.cbentley.framework.coreui.src4.event.SenseEvent;
-import pasa.cbentley.framework.coreui.src4.interfaces.IExternalDevice;
-import pasa.cbentley.framework.coreui.src4.interfaces.ITechSenses;
-import pasa.cbentley.framework.coreui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.ctx.CoreUiCtx;
+import pasa.cbentley.framework.core.ui.src4.event.SenseEvent;
+import pasa.cbentley.framework.core.ui.src4.interfaces.IExternalDevice;
+import pasa.cbentley.framework.core.ui.src4.interfaces.ITechSenses;
+import pasa.cbentley.framework.core.ui.src4.tech.IInput;
 import pasa.cbentley.framework.jinput.j2se.ctx.ConfigJInputDef;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
+import pasa.cbentley.framework.jinput.j2se.ctx.ObjectJIC;
 
 /**
  * Engine is started by Host Launcher?
@@ -52,28 +54,31 @@ import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
  * @author Charles Bentley
  *
  */
-public abstract class JInputEngineAbstract implements IAPIService, IInput, IStringable, ControllerListener, ILifeListener {
+public abstract class JInputServiceAbstract implements IAPIService, IInput, IStringable, ControllerListener, ILifeListener {
 
    /**
     * Iterate faster on active controllers
     */
-   List<Controller>              activeControllers = new ArrayList();
+   List<Controller>                  activeControllers = new ArrayList();
 
    /**
     * 
     */
    protected List<ControllerBentley> exs               = new ArrayList();
 
-   protected JInputCtx           jic;
+   protected JInputCtx               jic;
 
-   private PollingTask           pollingTask;
+   private PollingTask               pollingTask;
 
-   private Thread                serviceThread;
+   private Thread                    serviceThread;
 
    /**
-    * Since this is an optional code context, it is instancetiated
+    * Since this is an optional code context, it is instancetiated without any parameters.
+    * <p>
+    * {@link JInputCtx} is set later using {@link JInputServiceAbstract#setCtx(ACtx)}
+    * </p>
     */
-   public JInputEngineAbstract() {
+   public JInputServiceAbstract() {
       ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
       ce.addControllerListener(this);
    }
@@ -146,14 +151,14 @@ public abstract class JInputEngineAbstract implements IAPIService, IInput, IStri
    public void controllerAdded(ControllerEvent ce) {
       Controller c = ce.getController();
       //#debug
-      jic.toDLog().pEvent1("Name=" + c.getName(), this, JInputEngineAbstract.class, "controllerAdded");
+      jic.toDLog().pEvent1("Name=" + c.getName(), this, JInputServiceAbstract.class, "controllerAdded");
 
    }
 
    public void controllerRemoved(ControllerEvent ce) {
       Controller c = ce.getController();
       //#debug
-      jic.toDLog().pEvent1("Name=" + c.getName(), this, JInputEngineAbstract.class, "controllerRemoved");
+      jic.toDLog().pEvent1("Name=" + c.getName(), this, JInputServiceAbstract.class, "controllerRemoved");
    }
 
    public void deviceConnectionEvent(ControllerBentley ei, boolean isConnect) {
@@ -165,22 +170,23 @@ public abstract class JInputEngineAbstract implements IAPIService, IInput, IStri
       }
       final SenseEvent se = new SenseEvent(jic.getCoreUiCtx(), ITechSenses.GESTURE_TYPE_12_DEVICE, deviceButton, ei.id);
       //final DeviceEvent de = new DeviceEvent(fc, DEVICE_2_GAMEPAD, ei.id, MOD_4_SENSED, deviceButton);
-      se.setParamO1(ei.getExdevice());
+      se.setParamO1(ei.getExternalDevice());
 
-      CoreUiCtx cac = jic.getCoreUiCtx();
+      CoreUiCtx cuc = jic.getCoreUiCtx();
       //we are in the jinput thread, so we have to call serially
       //publish event on the active canvas?
-      cac.runGUI(new Runnable() {
+      IExecutor executor = cuc.getExecutor();
+      executor.executeMainLater(new Runnable() {
 
          public void run() {
             //this gamepad manager has no idea which canvas has the focus
             //other services with mouse focus tracking.. can find the canvashost and canvasappli
-            cac.publishEvent(se);
+            cuc.publishEventOnAllCanvas(se);
          }
       });
    }
 
-   public boolean isServiceRunning(int id) {
+   public boolean isServiceRunning(int serviceID, Object param) {
       return serviceThread != null && pollingTask.isRunning();
    }
 
@@ -204,16 +210,18 @@ public abstract class JInputEngineAbstract implements IAPIService, IInput, IStri
     * Listen for events and listen for controllers.
     * TODO send signals to stop / start listening for new controllers.
     */
-   public boolean startService(int id) {
+   public boolean startService(int serviceID, Object param) {
+      //#debug
+      toDLog().pFlow("serviceID=" + serviceID, this, JInputServiceAbstract.class, "startService@222", LVL_05_FINE, true);
       pollingTask = new PollingTask(jic, this);
       serviceThread = new Thread(pollingTask);
       serviceThread.start();
       return true;
    }
 
-   public boolean stopService(int id) {
+   public boolean stopService(int serviceID, Object param) {
       //#debug
-      toDLog().pFlow("id=" + id, this, JInputEngineAbstract.class, "stopService", LVL_05_FINE, true);
+      toDLog().pFlow("serviceID=" + serviceID, this, JInputServiceAbstract.class, "stopService@222", LVL_05_FINE, true);
       if (pollingTask != null) {
          pollingTask.setRunning(false);
       }
@@ -231,8 +239,8 @@ public abstract class JInputEngineAbstract implements IAPIService, IInput, IStri
    }
 
    public void toString(Dctx dc) {
-      dc.root(this, JInputEngineAbstract.class, 266);
-      dc.appendVarWithSpace("isServiceRunning(0", isServiceRunning(0));
+      dc.root(this, JInputServiceAbstract.class, 266);
+      dc.appendVarWithSpace("isServiceRunning(0", isServiceRunning(0,null));
       dc.appendVarWithSpace("HEARTBEATMS", jic.getHeartBeatMilliSeconds());
 
       dc.appendVarWithSpace("#controllers", exs.size());
@@ -241,7 +249,7 @@ public abstract class JInputEngineAbstract implements IAPIService, IInput, IStri
             ControllerBentley cw = (ControllerBentley) i.next();
             dc.nl();
             dc.append(cw.getController().getName());
-            dc.nlLvl("Pad #" + cw.getID(), cw.getExdevice());
+            dc.nlLvl("Pad #" + cw.getDeviceID(), cw.getExternalDevice());
          } catch (Exception e) {
             e.printStackTrace();
          }
@@ -254,7 +262,7 @@ public abstract class JInputEngineAbstract implements IAPIService, IInput, IStri
 
    public void toString1Line(Dctx dc) {
       dc.root1Line(this, "JInputEngineAbstract");
-      if (isServiceRunning(0)) {
+      if (isServiceRunning(0,null)) {
          dc.appendWithSpace("Running");
       } else {
          dc.appendWithSpace("Stopped");

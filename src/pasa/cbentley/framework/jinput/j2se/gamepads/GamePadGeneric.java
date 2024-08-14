@@ -5,10 +5,10 @@ import net.java.games.input.Component.Identifier;
 import net.java.games.input.Event;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.framework.coreui.src4.event.DeviceEvent;
-import pasa.cbentley.framework.coreui.src4.interfaces.IExternalDevice;
-import pasa.cbentley.framework.coreui.src4.tech.ITechCodes;
-import pasa.cbentley.framework.coreui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.event.DeviceEvent;
+import pasa.cbentley.framework.core.ui.src4.interfaces.IExternalDevice;
+import pasa.cbentley.framework.core.ui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.tech.ITechCodes;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
 import pasa.cbentley.framework.jinput.j2se.engine.ControllerBentley;
 
@@ -26,14 +26,14 @@ public class GamePadGeneric extends GamePadAbstract {
       return "GenericPad";
    }
 
-   public String getName(int button) {
+   public String getNameButton(int button) {
       return "Button" + button;
    }
 
    public DeviceEvent getEvent(Event event, ControllerBentley ei) {
       int deviceType = IInput.DEVICE_2_GAMEPAD;
 
-      int deviceID = ei.getID(); //id of gamepad
+      int deviceID = ei.getDeviceID(); //id of gamepad
       int deviceButton = 0;
       Component c = event.getComponent();
       float data = event.getValue();
@@ -67,10 +67,8 @@ public class GamePadGeneric extends GamePadAbstract {
          }
          deviceButton = super.getDeviceButton(c);
       }
-      IExternalDevice ed = ei.getExdevice();
       //create event use touc
       final DeviceEvent de = new DeviceEvent(getCoreUiCtx(), deviceType, deviceID, mode, deviceButton);
-      de.setParamO1(ed);
       return de;
    }
 

@@ -5,17 +5,17 @@ import net.java.games.input.Component.Identifier;
 import net.java.games.input.Event;
 import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.framework.coreui.src4.event.DeviceEvent;
-import pasa.cbentley.framework.coreui.src4.interfaces.IExternalDevice;
-import pasa.cbentley.framework.coreui.src4.tech.ITechCodes;
-import pasa.cbentley.framework.coreui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.event.DeviceEvent;
+import pasa.cbentley.framework.core.ui.src4.interfaces.IExternalDevice;
+import pasa.cbentley.framework.core.ui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.tech.ITechCodes;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
 import pasa.cbentley.framework.jinput.j2se.engine.ControllerBentley;
 
 public class GamePadSega6Buttons extends GamePadAbstract {
 
-   public GamePadSega6Buttons(JInputCtx fc) {
-      super(fc);
+   public GamePadSega6Buttons(JInputCtx jic) {
+      super(jic);
    }
 
    public String getName() {
@@ -85,7 +85,7 @@ public class GamePadSega6Buttons extends GamePadAbstract {
    public DeviceEvent getEvent(Event event, ControllerBentley ei) {
       int deviceType = IInput.DEVICE_2_GAMEPAD;
 
-      int deviceID = ei.getID(); //id of gamepad
+      int deviceID = ei.getDeviceID(); //id of gamepad
       int deviceButton = 0;
       Component c = event.getComponent();
       float data = event.getValue();
@@ -119,10 +119,8 @@ public class GamePadSega6Buttons extends GamePadAbstract {
          }
          deviceButton = super.getDeviceButton(c);
       }
-      IExternalDevice ed = ei.getExdevice();
       //create event use touc
       final DeviceEvent de = new DeviceEvent(getCoreUiCtx(), deviceType, deviceID, mode, deviceButton);
-      de.setParamO1(ed);
       return de;
    }
 
@@ -130,13 +128,13 @@ public class GamePadSega6Buttons extends GamePadAbstract {
       return button == ITechCodes.PAD_BUTTON_3;
    }
 
-   public String getName(int button) {
+   public String getNameButton(int button) {
       return getButton(button);
    }
 
    //#mdebug
    public void toString(Dctx dc) {
-      dc.root(this, GamePadSega6Buttons.class, "@line5");
+      dc.root(this, GamePadSega6Buttons.class, 140);
       toStringPrivate(dc);
       super.toString(dc.sup());
    }

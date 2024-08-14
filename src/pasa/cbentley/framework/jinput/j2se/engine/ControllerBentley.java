@@ -1,84 +1,79 @@
 package pasa.cbentley.framework.jinput.j2se.engine;
 
+import net.java.games.input.Component;
 import net.java.games.input.Controller;
-import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
-import pasa.cbentley.core.src4.logging.IDLog;
 import pasa.cbentley.core.src4.logging.IStringable;
-import pasa.cbentley.framework.coreui.src4.interfaces.IExternalDevice;
+import pasa.cbentley.framework.core.ui.src4.interfaces.IExternalDevice;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
+import pasa.cbentley.framework.jinput.j2se.ctx.ObjectJIC;
 
-public class ControllerBentley implements IStringable {
+public class ControllerBentley extends ObjectJIC implements IStringable {
 
    /**
     * JInput wrapper of the external device
     */
-   private final Controller  controller;
+   private final Controller controller;
 
    /**
     * Interface to the device properties
     */
-   private IExternalDevice   exdevice;
+   private IExternalDevice  exdevice;
 
-   protected final int       id;
+   protected final int      id;
 
-   protected final JInputCtx jic;
-
-   public ControllerBentley(JInputCtx jic, Controller controller, int gamePadID) {
-      this.jic = jic;
+   public ControllerBentley(JInputCtx jic, Controller controller, IExternalDevice exDevice, int deviceID) {
+      super(jic);
       //#debug
       jic.toStringCheckNull(controller);
+      //#debug
+      jic.toStringCheckNull(exDevice);
+
       this.controller = controller;
-      this.id = gamePadID;
+      this.exdevice = exDevice;
+      this.id = deviceID;
    }
 
    public Controller getController() {
       return controller;
    }
 
-   public IExternalDevice getExdevice() {
+   /**
+    * Must have been set
+    * @return
+    */
+   public IExternalDevice getExternalDevice() {
       return exdevice;
    }
 
-   public int getID() {
+   public int getDeviceID() {
       return id;
    }
 
-   public void setExdevice(IExternalDevice exdevice) {
-      this.exdevice = exdevice;
-   }
-
    //#mdebug
-   public IDLog toDLog() {
-      return toStringGetUCtx().toDLog();
-   }
-
-   public String toString() {
-      return Dctx.toString(this);
-   }
-
    public void toString(Dctx dc) {
-      dc.root(this, ControllerBentley.class, "@line5");
+      dc.root(this, ControllerBentley.class, 55);
       toStringPrivate(dc);
-   }
+      super.toString(dc.sup());
+      dc.nlLvl(exdevice, "exdevice");
 
-   public String toString1Line() {
-      return Dctx.toString1Line(this);
+      dc.append("net.java.games.input.Controller");
+      dc.appendVarWithNewLine("name", controller.getName());
+      ;
+      dc.appendVarWithNewLine("portnumber", controller.getPortNumber());
+      Component[] components = controller.getComponents();
+      dc.appendVarWithNewLine("#components", components.length);
    }
 
    public void toString1Line(Dctx dc) {
-      dc.root1Line(this, ControllerBentley.class);
+      dc.root1Line(this, ControllerBentley.class, 55);
       toStringPrivate(dc);
-   }
-
-   public UCtx toStringGetUCtx() {
-      return jic.getUC();
+      super.toString1Line(dc.sup1Line());
    }
 
    private void toStringPrivate(Dctx dc) {
       dc.appendVarWithSpace("id", id);
    }
-
    //#enddebug
 
 }

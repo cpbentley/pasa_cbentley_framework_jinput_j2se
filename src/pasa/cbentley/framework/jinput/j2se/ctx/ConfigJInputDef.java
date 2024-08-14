@@ -14,4 +14,8 @@ public class ConfigJInputDef implements IConfigJInput {
       return 20;
    }
 
+   public String getPathLibrary() {
+      return "C:\\Java\\lib\\jinput";
+   }
+
 }
