@@ -59,7 +59,6 @@ public class ControllerBentley extends ObjectJIC implements IStringable {
 
       dc.append("net.java.games.input.Controller");
       dc.appendVarWithNewLine("name", controller.getName());
-      ;
       dc.appendVarWithNewLine("portnumber", controller.getPortNumber());
       Component[] components = controller.getComponents();
       dc.appendVarWithNewLine("#components", components.length);

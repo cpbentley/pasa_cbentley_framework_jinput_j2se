@@ -32,7 +32,7 @@ import pasa.cbentley.framework.jinput.j2se.gamepads.GamePadSega6Buttons;
  */
 public class JInputCtx extends ACtx {
 
-   protected final IConfigJInput config;
+   protected final IConfigJInput configj;
 
    protected long                DEVICE_CHECK = 4000;
 
@@ -43,16 +43,16 @@ public class JInputCtx extends ACtx {
    private CoreFrameworkJ2seCtx  jcac;
 
    public JInputCtx(IConfigJInput config, CoreFrameworkJ2seCtx cac) {
-      super(cac.getUC());
+      super((config == null) ? new ConfigJInputDef() : config, cac.getUC());
       this.jcac = cac;
 
-      this.config = config;
+      this.configj = config;
       HEARTBEATMS = config.getHeartBeatMilliSeconds();
       DEVICE_CHECK = config.getBeatsForRefresh();
       isRefreshingDeviceList = config.isRefreshControllers();
 
       //#debug
-      toDLog().pInit("", this, JInputCtx.class, "Created@53", LVL_04_FINER, true);
+      toDLog().pCreate("", this, JInputCtx.class, "Created@53", LVL_05_FINE, true);
 
    }
 
@@ -202,7 +202,7 @@ public class JInputCtx extends ACtx {
 
    public void loadLibrary() {
       // something like "C:\\Java\\lib\\jinput";
-      String path = config.getPathLibrary();
+      String path = configj.getPathLibrary();
       //#debug
       toDLog().pInit("Loading JInput from " + path, this, JInputCtx.class, "loadLibrary@208", LVL_05_FINE, true);
       File nativeDir = new File(path);

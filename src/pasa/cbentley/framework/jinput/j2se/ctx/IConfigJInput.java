@@ -1,6 +1,8 @@
 package pasa.cbentley.framework.jinput.j2se.ctx;
 
-public interface IConfigJInput {
+import pasa.cbentley.core.src4.ctx.IConfig;
+
+public interface IConfigJInput extends IConfig {
 
    /**
     * Number of beats after which a refresh of available controller is
