@@ -3,7 +3,7 @@ package pasa.cbentley.framework.jinput.j2se.gamepads;
 import net.java.games.input.Component;
 import net.java.games.input.Event;
 import pasa.cbentley.framework.core.ui.src4.event.DeviceEvent;
-import pasa.cbentley.framework.core.ui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.tech.ITechInput;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
 import pasa.cbentley.framework.jinput.j2se.ctx.ObjectJIC;
 import pasa.cbentley.framework.jinput.j2se.engine.ControllerBentley;
@@ -38,10 +38,10 @@ public class AxisPadCtrl extends ObjectJIC {
       int mode = 0;
       int deviceButton = 0;
       int deviceID = ei.getDeviceID(); //id of gamepad
-      int deviceType = IInput.DEVICE_2_GAMEPAD;
+      int deviceType = ITechInput.DEVICE_2_GAMEPAD;
       if (data < 0) {
          if (data <= tUpLeft) {
-            mode = IInput.MOD_0_PRESSED;
+            mode = ITechInput.MOD_0_PRESSED;
             if (isPressedPadUp) {
                //already pressed
                return null;
@@ -50,7 +50,7 @@ public class AxisPadCtrl extends ObjectJIC {
                deviceButton = codeNegative;
             }
          } else {
-            mode = IInput.MOD_1_RELEASED;
+            mode = ITechInput.MOD_1_RELEASED;
             if (isPressedPadUp) {
                isPressedPadUp = false;
                deviceButton = codeNegative;
@@ -61,7 +61,7 @@ public class AxisPadCtrl extends ObjectJIC {
       } else {
          //data is > 0
          if (data >= tDownRight) {
-            mode = IInput.MOD_0_PRESSED;
+            mode = ITechInput.MOD_0_PRESSED;
             if (isPressedPadDown) {
                //already pressed
                return null;
@@ -70,7 +70,7 @@ public class AxisPadCtrl extends ObjectJIC {
                deviceButton = codePositive;
             }
          } else {
-            mode = IInput.MOD_1_RELEASED;
+            mode = ITechInput.MOD_1_RELEASED;
             if (isPressedPadDown) {
                isPressedPadDown = false;
                deviceButton = codePositive;

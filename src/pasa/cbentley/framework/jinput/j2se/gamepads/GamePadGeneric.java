@@ -7,7 +7,7 @@ import pasa.cbentley.core.src4.ctx.UCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.framework.core.ui.src4.event.DeviceEvent;
 import pasa.cbentley.framework.core.ui.src4.interfaces.IExternalDevice;
-import pasa.cbentley.framework.core.ui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.tech.ITechInput;
 import pasa.cbentley.framework.core.ui.src4.tech.ITechCodes;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
 import pasa.cbentley.framework.jinput.j2se.engine.ControllerBentley;
@@ -31,13 +31,13 @@ public class GamePadGeneric extends GamePadAbstract {
    }
 
    public DeviceEvent getEvent(Event event, ControllerBentley ei) {
-      int deviceType = IInput.DEVICE_2_GAMEPAD;
+      int deviceType = ITechInput.DEVICE_2_GAMEPAD;
 
       int deviceID = ei.getDeviceID(); //id of gamepad
       int deviceButton = 0;
       Component c = event.getComponent();
       float data = event.getValue();
-      int mode = IInput.MOD_0_PRESSED;
+      int mode = ITechInput.MOD_0_PRESSED;
       if (c.isAnalog()) {
          Identifier id = c.getIdentifier();
          if (id == Component.Identifier.Axis.X) {
@@ -46,7 +46,7 @@ public class GamePadGeneric extends GamePadAbstract {
             } else if (data == -1.0) {
                deviceButton = ITechCodes.PAD_LEFT;
             } else {
-               mode = IInput.MOD_1_RELEASED;
+               mode = ITechInput.MOD_1_RELEASED;
                deviceButton = ITechCodes.AXIS_X;
             }
          } else if (id == Component.Identifier.Axis.Y) {
@@ -56,14 +56,14 @@ public class GamePadGeneric extends GamePadAbstract {
             } else if (data == -1.0) {
                deviceButton = ITechCodes.PAD_UP;
             } else {
-               mode = IInput.MOD_1_RELEASED;
+               mode = ITechInput.MOD_1_RELEASED;
                deviceButton = ITechCodes.AXIS_X;
             }
          }
       } else {
          float v = event.getValue();
          if (v == 0) {
-            mode = IInput.MOD_1_RELEASED;
+            mode = ITechInput.MOD_1_RELEASED;
          }
          deviceButton = super.getDeviceButton(c);
       }

@@ -9,7 +9,7 @@ import pasa.cbentley.framework.core.ui.src4.event.DeviceEventFloat;
 import pasa.cbentley.framework.core.ui.src4.event.DeviceEventXY;
 import pasa.cbentley.framework.core.ui.src4.event.SenseEvent;
 import pasa.cbentley.framework.core.ui.src4.interfaces.ITechSenses;
-import pasa.cbentley.framework.core.ui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.tech.ITechInput;
 import pasa.cbentley.framework.core.ui.src4.tech.ITechCodes;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
 import pasa.cbentley.framework.jinput.j2se.engine.ControllerBentley;
@@ -135,7 +135,7 @@ public class GamePadGameCube extends GamePadAbstract {
 
    private DeviceEvent getDigitalFromAnalogRotation(Event event, Component component, ControllerBentley ei, int deviceButton) {
       float data = event.getValue();
-      int deviceType = IInput.DEVICE_2_GAMEPAD;
+      int deviceType = ITechInput.DEVICE_2_GAMEPAD;
       int deviceID = ei.getDeviceID(); //id of gamepad
 
       if (data >= 0.02 || data <= -0.02) {
@@ -151,12 +151,12 @@ public class GamePadGameCube extends GamePadAbstract {
   
 
    public DeviceEvent getEvent(Event event, ControllerBentley ei) {
-      int deviceType = IInput.DEVICE_2_GAMEPAD;
+      int deviceType = ITechInput.DEVICE_2_GAMEPAD;
 
       int deviceID = ei.getDeviceID(); //id of gamepad
       int deviceButton = 0;
       Component component = event.getComponent();
-      int mode = IInput.MOD_0_PRESSED;
+      int mode = ITechInput.MOD_0_PRESSED;
       DeviceEvent de = null;
 
       Identifier identifier = component.getIdentifier();
@@ -166,7 +166,7 @@ public class GamePadGameCube extends GamePadAbstract {
          float data = event.getValue();
          deviceButton = ITechCodes.PAD_POV;
          //that special cross
-         DeviceEventFloat d = new DeviceEventFloat(getCoreUiCtx(), IInput.DEVICE_2_GAMEPAD, deviceID, deviceButton, data);
+         DeviceEventFloat d = new DeviceEventFloat(getCoreUiCtx(), ITechInput.DEVICE_2_GAMEPAD, deviceID, deviceButton, data);
          de = d;
 
       } else if (component.isAnalog()) {
@@ -209,7 +209,7 @@ public class GamePadGameCube extends GamePadAbstract {
                      deviceButton = ITechCodes.THROTTLE_B;
                   }
                }
-               DeviceEventFloat d = new DeviceEventFloat(getCoreUiCtx(), IInput.DEVICE_2_GAMEPAD, deviceID, deviceButton, data);
+               DeviceEventFloat d = new DeviceEventFloat(getCoreUiCtx(), ITechInput.DEVICE_2_GAMEPAD, deviceID, deviceButton, data);
                de = d;
             }
 
@@ -218,9 +218,9 @@ public class GamePadGameCube extends GamePadAbstract {
          //not analog
          float v = event.getValue();
          if (v == 0) {
-            mode = IInput.MOD_1_RELEASED;
+            mode = ITechInput.MOD_1_RELEASED;
          } else {
-            mode = IInput.MOD_0_PRESSED;
+            mode = ITechInput.MOD_0_PRESSED;
          }
          deviceButton = super.getDeviceButton(component);
          de = new DeviceEvent(getCoreUiCtx(), deviceType, deviceID, mode, deviceButton);

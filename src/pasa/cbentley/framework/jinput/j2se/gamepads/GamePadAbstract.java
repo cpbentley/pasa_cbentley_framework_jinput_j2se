@@ -10,7 +10,7 @@ import pasa.cbentley.core.src4.structs.IntToStrings;
 import pasa.cbentley.framework.core.ui.src4.ctx.CoreUiCtx;
 import pasa.cbentley.framework.core.ui.src4.event.DeviceEvent;
 import pasa.cbentley.framework.core.ui.src4.interfaces.IExternalDevice;
-import pasa.cbentley.framework.core.ui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.tech.ITechInput;
 import pasa.cbentley.framework.core.ui.src4.tech.ITechCodes;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
 import pasa.cbentley.framework.jinput.j2se.ctx.ObjectJIC;
@@ -88,7 +88,7 @@ public abstract class GamePadAbstract extends ObjectJIC implements IExternalDevi
    public abstract DeviceEvent getEvent(Event event, ControllerBentley ei);
 
    public int getType() {
-      return IInput.DEVICE_2_GAMEPAD;
+      return ITechInput.DEVICE_2_GAMEPAD;
    }
 
    //#mdebug

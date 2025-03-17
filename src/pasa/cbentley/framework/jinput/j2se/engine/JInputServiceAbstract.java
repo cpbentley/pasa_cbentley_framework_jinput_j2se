@@ -21,7 +21,7 @@ import pasa.cbentley.framework.core.ui.src4.ctx.CoreUiCtx;
 import pasa.cbentley.framework.core.ui.src4.event.SenseEvent;
 import pasa.cbentley.framework.core.ui.src4.interfaces.IExternalDevice;
 import pasa.cbentley.framework.core.ui.src4.interfaces.ITechSenses;
-import pasa.cbentley.framework.core.ui.src4.tech.IInput;
+import pasa.cbentley.framework.core.ui.src4.tech.ITechInput;
 import pasa.cbentley.framework.jinput.j2se.ctx.ConfigJInputDef;
 import pasa.cbentley.framework.jinput.j2se.ctx.JInputCtx;
 import pasa.cbentley.framework.jinput.j2se.ctx.ObjectJIC;
@@ -54,7 +54,7 @@ import pasa.cbentley.framework.jinput.j2se.ctx.ObjectJIC;
  * @author Charles Bentley
  *
  */
-public abstract class JInputServiceAbstract implements IAPIService, IInput, IStringable, ControllerListener, ILifeListener {
+public abstract class JInputServiceAbstract implements IAPIService, ITechInput, IStringable, ControllerListener, ILifeListener {
 
    /**
     * Iterate faster on active controllers
